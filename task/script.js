@@ -32,10 +32,14 @@ function createCounter() {
 
 /* ---------- отрисовка ---------- */
 
+let onlyImportant = false;
+
 function render() {
   listEl.textContent = "";
 
-  tasks.forEach((task) => {
+  const visible = onlyImportant ? tasks.filter((t) => t.priority >= 5) : tasks;
+
+  visible.forEach((task) => {
     const item = document.createElement("li");
     item.className = "item";
     item.dataset.id = task.id;
@@ -52,7 +56,7 @@ function render() {
     removeBtn.className = "item__remove";
     removeBtn.type = "button";
     removeBtn.textContent = "Удалить";
-    removeBtn.addEventListener("click", () => removeTask(item.dataset.id));
+    removeBtn.addEventListener("click", () => removeTask(task.id));
 
     item.append(text, priority, removeBtn);
     listEl.append(item);
@@ -70,22 +74,22 @@ function removeTask(id) {
 /* ---------- сортировка по важности ---------- */
 
 sortBtn.addEventListener("click", function () {
-  tasks.sort();
+  tasks.sort((a, b) => b.priority - a.priority);
   render();
 });
 
 /* ---------- фильтр: только важные ---------- */
 
 filterBtn.addEventListener("click", function () {
-  tasks.filter((task) => task.priority >= 5);
+  onlyImportant = !onlyImportant;
   render();
 });
 
 /* ---------- счётчик нажатий ---------- */
+const countActions = createCounter();
 
 document.querySelectorAll(".btn").forEach((btn) => {
   btn.addEventListener("click", function () {
-    const countActions = createCounter();
     actionsEl.textContent = countActions();
   });
 });
