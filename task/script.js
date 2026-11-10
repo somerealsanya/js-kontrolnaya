@@ -19,6 +19,8 @@ const listEl = document.querySelector("#list");
 const actionsEl = document.querySelector("#actions");
 const sortBtn = document.querySelector("#sortBtn");
 const filterBtn = document.querySelector("#filterBtn");
+const countActions = createCounter();
+
 
 /* ---------- счётчик действий ---------- */
 
@@ -62,7 +64,7 @@ function render() {
 /* ---------- удаление ---------- */
 
 function removeTask(id) {
-  const task = tasks.find((t) => t.id === id);
+  const task = tasks.find((t) => t.id === Number(id));
   tasks.splice(tasks.indexOf(task), 1);
   render();
 }
@@ -70,14 +72,14 @@ function removeTask(id) {
 /* ---------- сортировка по важности ---------- */
 
 sortBtn.addEventListener("click", function () {
-  tasks.sort();
+  tasks.sort((a, b) => b.priority - a.priority);
   render();
 });
 
 /* ---------- фильтр: только важные ---------- */
 
 filterBtn.addEventListener("click", function () {
-  tasks.filter((task) => task.priority >= 5);
+  tasks = tasks.filter((task) => task.priority >= 5);
   render();
 });
 
@@ -85,7 +87,6 @@ filterBtn.addEventListener("click", function () {
 
 document.querySelectorAll(".btn").forEach((btn) => {
   btn.addEventListener("click", function () {
-    const countActions = createCounter();
     actionsEl.textContent = countActions();
   });
 });
