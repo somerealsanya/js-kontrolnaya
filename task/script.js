@@ -62,15 +62,14 @@ function render() {
 /* ---------- удаление ---------- */
 
 function removeTask(id) {
-  const task = tasks.find((t) => t.id === id);
-  tasks.splice(tasks.indexOf(task), 1);
+  tasks = tasks.filter((task) => task.id !== Number(id));
   render();
 }
 
 /* ---------- сортировка по важности ---------- */
 
 sortBtn.addEventListener("click", function () {
-  tasks.sort();
+  tasks.sort((a, b) => b.priority - a.priority);
   render();
 });
 
@@ -82,10 +81,9 @@ filterBtn.addEventListener("click", function () {
 });
 
 /* ---------- счётчик нажатий ---------- */
-
+const countActions = createCounter();
 document.querySelectorAll(".btn").forEach((btn) => {
   btn.addEventListener("click", function () {
-    const countActions = createCounter();
     actionsEl.textContent = countActions();
   });
 });
