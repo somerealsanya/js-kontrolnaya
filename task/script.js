@@ -14,6 +14,7 @@ let tasks = [
   { id: 3, text: "Собрать стенд", priority: 3 },
   { id: 4, text: "Договориться о кофе-брейке", priority: 9 },
 ];
+let showOnlyImportant = false;
 
 const listEl = document.querySelector("#list");
 const actionsEl = document.querySelector("#actions");
@@ -35,7 +36,11 @@ function createCounter() {
 function render() {
   listEl.textContent = "";
 
-  tasks.forEach((task) => {
+  const visibleTasks = showOnlyImportant
+    ? tasks.filter((task) => task.priority >= 5)
+    : tasks;
+
+  visibleTasks.forEach((task) => {
     const item = document.createElement("li");
     item.className = "item";
     item.dataset.id = task.id;
@@ -62,30 +67,34 @@ function render() {
 /* ---------- удаление ---------- */
 
 function removeTask(id) {
-  const task = tasks.find((t) => t.id === id);
-  tasks.splice(tasks.indexOf(task), 1);
+  const taskIndex = tasks.findIndex((task) => task.id === Number(id));
+  if (taskIndex === -1) return;
+
+  tasks.splice(taskIndex, 1);
+  actionsEl.textContent = countActions();
   render();
 }
 
 /* ---------- сортировка по важности ---------- */
 
 sortBtn.addEventListener("click", function () {
-  tasks.sort();
+  tasks.sort((a, b) => b.priority - a.priority);
   render();
 });
 
 /* ---------- фильтр: только важные ---------- */
 
 filterBtn.addEventListener("click", function () {
-  tasks.filter((task) => task.priority >= 5);
+  showOnlyImportant = true;
   render();
 });
 
 /* ---------- счётчик нажатий ---------- */
 
+const countActions = createCounter();
+
 document.querySelectorAll(".btn").forEach((btn) => {
   btn.addEventListener("click", function () {
-    const countActions = createCounter();
     actionsEl.textContent = countActions();
   });
 });
