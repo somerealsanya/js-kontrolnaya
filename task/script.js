@@ -1,13 +1,3 @@
-/* ============================================================
-   СПИСОК ЗАДАЧ
-
-   Код запускается, в консоли чисто. Но четыре кнопки работают
-   не так, как обещает их название.
-
-   Найдите четыре ошибки, почините их и опишите каждую
-   в файле ОТВЕТЫ.md, часть B.
-   ============================================================ */
-
 let tasks = [
   { id: 1, text: "Напечатать раздаточные материалы", priority: 10 },
   { id: 2, text: "Проверить звук в аудитории", priority: 2 },
@@ -29,6 +19,8 @@ function createCounter() {
     return count;
   };
 }
+
+const countActions = createCounter();
 
 /* ---------- отрисовка ---------- */
 
@@ -62,7 +54,7 @@ function render() {
 /* ---------- удаление ---------- */
 
 function removeTask(id) {
-  const task = tasks.find((t) => t.id === id);
+  const task = tasks.find((t) => t.id === Number(id));
   tasks.splice(tasks.indexOf(task), 1);
   render();
 }
@@ -70,14 +62,14 @@ function removeTask(id) {
 /* ---------- сортировка по важности ---------- */
 
 sortBtn.addEventListener("click", function () {
-  tasks.sort();
+  tasks.sort((a, b) => b.priority - a.priority);
   render();
 });
 
 /* ---------- фильтр: только важные ---------- */
 
 filterBtn.addEventListener("click", function () {
-  tasks.filter((task) => task.priority >= 5);
+  tasks = tasks.filter((task) => task.priority >= 5);
   render();
 });
 
@@ -85,7 +77,6 @@ filterBtn.addEventListener("click", function () {
 
 document.querySelectorAll(".btn").forEach((btn) => {
   btn.addEventListener("click", function () {
-    const countActions = createCounter();
     actionsEl.textContent = countActions();
   });
 });

@@ -148,6 +148,6 @@ users.forEach((u) => {
   li.textContent = u.name;
   list.append(li);
 });
-```
+``` 
 
 Какой выберете и почему?
