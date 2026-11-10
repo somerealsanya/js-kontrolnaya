@@ -7,7 +7,7 @@
    Найдите четыре ошибки, почините их и опишите каждую
    в файле ОТВЕТЫ.md, часть B.
    ============================================================ */
-
+let isOnliPriority = false;
 let tasks = [
   { id: 1, text: "Напечатать раздаточные материалы", priority: 10 },
   { id: 2, text: "Проверить звук в аудитории", priority: 2 },
@@ -33,9 +33,10 @@ function createCounter() {
 /* ---------- отрисовка ---------- */
 
 function render() {
+  const visibleTasks = isOnliPriority ? tasks.filter((task)=> task.priority>5) : tasks;
   listEl.textContent = "";
-
-  tasks.forEach((task) => {
+  
+  visibleTasks.forEach((task) => {
     const item = document.createElement("li");
     item.className = "item";
     item.dataset.id = task.id;
@@ -62,7 +63,7 @@ function render() {
 /* ---------- удаление ---------- */
 
 function removeTask(id) {
-  const task = tasks.find((t) => t.id === id);
+  const task = tasks.find((t) => t.id === Number(id));
   tasks.splice(tasks.indexOf(task), 1);
   render();
 }
@@ -70,22 +71,23 @@ function removeTask(id) {
 /* ---------- сортировка по важности ---------- */
 
 sortBtn.addEventListener("click", function () {
-  tasks.sort();
+  let visibleTasks = tasks.sort((a,b)=>  b.priority-a.priority );
   render();
 });
 
 /* ---------- фильтр: только важные ---------- */
 
 filterBtn.addEventListener("click", function () {
-  tasks.filter((task) => task.priority >= 5);
+  isOnliPriority = !isOnliPriority;
+  filterBtn.textContent = isOnliPriority? "Показать все": "Только важные";
   render();
 });
 
 /* ---------- счётчик нажатий ---------- */
+const countActions = createCounter();
 
 document.querySelectorAll(".btn").forEach((btn) => {
-  btn.addEventListener("click", function () {
-    const countActions = createCounter();
+  btn.addEventListener("click", function (){
     actionsEl.textContent = countActions();
   });
 });
